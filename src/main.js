@@ -19,9 +19,6 @@ const currentAnswerArr = currentA.split('')
 
 const maxGuesses = 6;
 let numberOfIncorrGuess = 0;
-// arr[0].question
-// arr[0].answer
-// math.random for arr index
 
 const wrapper = document.createElement('div')
 wrapper.classList.add('wrapper')
@@ -53,12 +50,14 @@ word.classList.add('word')
 riddle.appendChild(word)
 
 function renderAnswer(answer) {
+    riddle.removeChild(word)
     answer.forEach((item) => {
         const underscores = document.createElement('span');
         underscores.textContent = '_';
         underscores.classList.add('underscores')
         word.appendChild(underscores);
     })
+    riddle.appendChild(word)
 }
 renderAnswer(currentAnswerArr);
 
@@ -89,7 +88,6 @@ abc.forEach((item) => {
 });
 
 document.addEventListener('keydown', function(event) {
-
     const updatedAnswer = currentAnswerArr.map((item) => {
         if (event.key === item)
             item = event.key; 
