@@ -2,11 +2,11 @@
 import './style.css'
 
 let QAndA = [
-    {question:'A medical condition characterized by the abnormal increase of body temperature.', answer: 'Hyperthermia'},
-    {question: 'A large celestial body that orbits a star.', answer: 'Planet'},
-    {question: 'A building or outdoor area where plays, films, or performances are presented.', answer: 'Auditorium'},
-    {question: 'A fear of open or crowded spaces.', answer: 'Agoraphobia'},
-    {question: 'The process by which green plants use sunlight to synthesize food.', answer: 'Photosynthesis'},
+    {question:'A medical condition characterized by the abnormal increase of body temperature.', answer: 'hyperthermia'},
+    {question: 'A large celestial body that orbits a star.', answer: 'planet'},
+    {question: 'A building or outdoor area where plays, films, or performances are presented.', answer: 'auditorium'},
+    {question: 'A fear of open or crowded spaces.', answer: 'agoraphobia'},
+    {question: 'The process by which green plants use sunlight to synthesize food.', answer: 'photosynthesis'},
 ]
 
 const lastIndex = QAndA.length;
@@ -49,15 +49,16 @@ word.classList.add('word')
 
 riddle.appendChild(word)
 
+let answerContainer = document.createElement('div')
+word.appendChild(answerContainer)
+
 function renderAnswer(answer) {
-    riddle.removeChild(word)
     answer.forEach((item) => {
-        const underscores = document.createElement('span');
-        underscores.textContent = '_';
-        underscores.classList.add('underscores')
-        word.appendChild(underscores);
+        const underscore = document.createElement('span');
+        underscore.textContent = '_';
+        underscore.classList.add('underscore')
+        answerContainer.appendChild(underscore);
     })
-    riddle.appendChild(word)
 }
 renderAnswer(currentAnswerArr);
 
@@ -86,11 +87,25 @@ abc.forEach((item) => {
     keyboardButton.textContent = item;
     virtualKeyboard.appendChild(keyboardButton);
 });
-
+const eventArray = []
 document.addEventListener('keydown', function(event) {
-    const updatedAnswer = currentAnswerArr.map((item) => {
-        if (event.key === item)
-            item = event.key; 
+    answerContainer.remove()
+    answerContainer = document.createElement('div')
+    currentAnswerArr.map((item) => {
+        const underscore = document.createElement('span');
+        underscore.textContent = '_';
+        underscore.classList.add('underscore')
+        console.log("before character check:", item);
+        if (event.key === item) {
+            underscore.textContent = `${event.key}`
+            eventArray.push(item)
+        }
+        else if (eventArray.includes(item))
+            underscore.textContent = `${item}`
+        else 
+            numberOfIncorrGuess += 1;
+        answerContainer.appendChild(underscore)
     })
-    renderAnswer(updatedAnswer)
+    // renderAnswer(updatedAnswer)
+    word.appendChild(answerContainer)
 })
