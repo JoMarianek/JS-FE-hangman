@@ -19,6 +19,7 @@ const currentAnswerArr = currentA.split('')
 
 const maxGuesses = 6;
 let numberOfIncorrGuess = 0;
+let flag = 1;
 
 const wrapper = document.createElement('div')
 wrapper.classList.add('wrapper')
@@ -99,13 +100,23 @@ document.addEventListener('keydown', function(event) {
         if (event.key === item) {
             underscore.textContent = `${event.key}`
             eventArray.push(item)
+            flag = 0
+            console.log('first if flag:', flag)
         }
         else if (eventArray.includes(item))
             underscore.textContent = `${item}`
-        else 
-            numberOfIncorrGuess += 1;
+        // why doesnt a else work here? it sets flag to 1 for correct letters as well?
+        //if the event key matches no item of the array, then set
         answerContainer.appendChild(underscore)
+        console.log('incorr guess', numberOfIncorrGuess)
+        console.log('end of map flag:', flag)
     })
-    // renderAnswer(updatedAnswer)
+    if (flag === 1) {
+        numberOfIncorrGuess += 1
+        numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
+        
+    }
+    flag = 1;
+    console.log('end of function flag:', flag)
     word.appendChild(answerContainer)
 })
