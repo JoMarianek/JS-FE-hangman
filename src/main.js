@@ -106,7 +106,7 @@ document.addEventListener('keydown', function(event) {
         else if (eventArray.includes(item))
             underscore.textContent = `${item}`
         // why doesnt a else work here? it sets flag to 1 for correct letters as well?
-        //if the event key matches no item of the array, then set
+        //if the event key matches no item of the array
         answerContainer.appendChild(underscore)
         console.log('incorr guess', numberOfIncorrGuess)
         console.log('end of map flag:', flag)
@@ -114,7 +114,7 @@ document.addEventListener('keydown', function(event) {
     if (flag === 1) {
         numberOfIncorrGuess += 1
         numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
-        
+        images.src = `/hangman${numberOfIncorrGuess}.png`
     }
     flag = 1;
     console.log('end of function flag:', flag)
