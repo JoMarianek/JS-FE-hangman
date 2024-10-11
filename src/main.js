@@ -95,21 +95,15 @@ function keyboard(event) {
             underscore.textContent = `${event.target.textContent}`
             eventArray.push(item)
             flag = 0
-            console.log('first if flag:', flag)
         }
         else if (event.key === item) {
-                underscore.textContent = `${event.key}`
-                eventArray.push(item)
-                flag = 0
-                console.log('first if flag:', flag)
+            underscore.textContent = `${event.key}`
+            eventArray.push(item)
+            flag = 0
         }
         else if (eventArray.includes(item))
             underscore.textContent = `${item}`
-        // why doesnt a else work here? it sets flag to 1 for correct letters as well?
-        //if the event key matches no item of the array
         answerContainer.appendChild(underscore)
-        console.log('incorr guess', numberOfIncorrGuess)
-        console.log('end of map flag:', flag)
     })
     if (flag === 1) {
         numberOfIncorrGuess += 1
@@ -128,34 +122,5 @@ abc.forEach((item) => {
     keyboardButton.onclick = keyboard;
 });
 
-
 const eventArray = []
 document.addEventListener('keydown', keyboard)
-//     answerContainer.remove()
-//     answerContainer = document.createElement('div')
-//     currentAnswerArr.map((item) => {
-//         const underscore = document.createElement('span');
-//         underscore.textContent = '_';
-//         underscore.classList.add('underscore')
-//         console.log("before character check:", item);
-//         if (event.key === item) {
-//             underscore.textContent = `${event.key}`
-//             eventArray.push(item)
-//             flag = 0
-//             console.log('first if flag:', flag)
-//         }
-//         else if (eventArray.includes(item))
-//             underscore.textContent = `${item}`
-//         answerContainer.appendChild(underscore)
-//         console.log('incorr guess', numberOfIncorrGuess)
-//         console.log('end of map flag:', flag)
-//     })
-//     if (flag === 1) {
-//         numberOfIncorrGuess += 1
-//         numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
-//         images.src = `/hangman${numberOfIncorrGuess}.png`
-//     }
-//     flag = 1;
-//     console.log('end of function flag:', flag)
-//     word.appendChild(answerContainer)
-// })
