@@ -19,11 +19,35 @@ const currentAnswerArr = currentA.split('')
 
 const maxGuesses = 6;
 let numberOfIncorrGuess = 0;
-let flag = 1;
+let flagIncorrGuess = 1;
+let flagSuccess = 0
+
+
 
 const wrapper = document.createElement('div')
 wrapper.classList.add('wrapper')
 document.body.appendChild(wrapper)
+
+const outcomeMessage = document.createElement('div')
+    outcomeMessage.textContent = `You lost. `
+    outcomeMessage.classList.add('modal')
+    // modal.classList.add('hidden')
+    wrapper.appendChild(outcomeMessage)
+const correctAnswer = document.createElement('div')
+    correctAnswer.textContent = `The correct answer was: ${currentA}`
+    outcomeMessage.appendChild(correctAnswer)
+
+    const playAgainB = document.createElement('button')
+    playAgainB.textContent = 'Play again'
+    playAgainB.classList.add('play-again-button')
+    outcomeMessage.appendChild(playAgainB)
+    playAgainB.onclick = function(event) {
+        outcomeMessage.classList.toggle('hidden')
+        wrapper.remove()
+        document.body.appendChild(wrapper)
+        // document.body.appendChild(wrapper) how to restart app again, wrap everythign 
+        // afunction? no that woudl be a god fucntion no?
+    }
 
 const gallows = document.createElement('div')
 gallows.classList.add('gallows')
@@ -94,24 +118,24 @@ function keyboard(event) {
         if (event.target.textContent === item) {
             underscore.textContent = `${event.target.textContent}`
             eventArray.push(item)
-            flag = 0
+            flagIncorrGuess = 0
         }
         else if (event.key === item) {
             underscore.textContent = `${event.key}`
             eventArray.push(item)
-            flag = 0
+            flagIncorrGuess = 0
         }
         else if (eventArray.includes(item))
             underscore.textContent = `${item}`
         answerContainer.appendChild(underscore)
     })
-    if (flag === 1) {
+    if (flagIncorrGuess === 1) {
         numberOfIncorrGuess += 1
         numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
         images.src = `/hangman${numberOfIncorrGuess}.png`
     }
-    flag = 1;
-    console.log('end of function flag:', flag)
+    flagIncorrGuess = 1;
+    console.log('end of function flag:', flagIncorrGuess)
     word.appendChild(answerContainer)
 }
 
@@ -124,3 +148,12 @@ abc.forEach((item) => {
 
 const eventArray = []
 document.addEventListener('keydown', keyboard)
+
+// if incorr Guesses >6 OR all letters filled, show modal text content
+// you've lost. the correct word was currentA. OR you've won. the correct...
+// Play again button
+// how to check if all letters filled? store success, fail in vars and conditonally adapt
+// message of modal
+// if (numberOfIncorrGuess > maxGuesses || end of game) {
+//       modal.classList.
+// }

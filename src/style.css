@@ -49,6 +49,25 @@
 
 }
 
+.modal {
+    display: flex;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    flex-direction: column;
+    z-index: 1;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.play-again-button {
+    width: auto;
+    padding: 8px;
+}
+
 span {
     color: red;
 }
