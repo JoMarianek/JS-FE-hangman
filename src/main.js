@@ -19,8 +19,8 @@ const currentAnswerArr = currentA.split('')
 
 const maxGuesses = 6;
 let numberOfIncorrGuess = 0;
-let flagIncorrGuess = 1;
-let flagSuccess = 0
+let flagIncorrGuess = true;
+let flagSuccess = true;
 
 
 
@@ -28,26 +28,31 @@ const wrapper = document.createElement('div')
 wrapper.classList.add('wrapper')
 document.body.appendChild(wrapper)
 
-const outcomeMessage = document.createElement('div')
-    outcomeMessage.textContent = `You lost. `
-    outcomeMessage.classList.add('modal')
+function renderModal() {
+    const modal = document.createElement('div')
+    modal.textContent = `You lost. `
+    modal.classList.add('modal')
     // modal.classList.add('hidden')
-    wrapper.appendChild(outcomeMessage)
-const correctAnswer = document.createElement('div')
+    wrapper.appendChild(modal)
+    const correctAnswer = document.createElement('div')
     correctAnswer.textContent = `The correct answer was: ${currentA}`
-    outcomeMessage.appendChild(correctAnswer)
+    modal.appendChild(correctAnswer)
 
     const playAgainB = document.createElement('button')
     playAgainB.textContent = 'Play again'
     playAgainB.classList.add('play-again-button')
-    outcomeMessage.appendChild(playAgainB)
+    modal.appendChild(playAgainB)
     playAgainB.onclick = function(event) {
-        outcomeMessage.classList.toggle('hidden')
+        modal.classList.toggle('hidden')
         wrapper.remove()
         document.body.appendChild(wrapper)
+        numberOfIncorrGuess = 0;
+        currentQA = QAndA[index]
+        //update currentQA
         // document.body.appendChild(wrapper) how to restart app again, wrap everythign 
         // afunction? no that woudl be a god fucntion no?
     }
+}
 
 const gallows = document.createElement('div')
 gallows.classList.add('gallows')
@@ -112,32 +117,41 @@ function keyboard(event) {
     answerContainer = document.createElement('div')
     currentAnswerArr.map((item) => {
         const underscore = document.createElement('span');
-        underscore.textContent = '_';
+        // underscore.textContent = '_';
         underscore.classList.add('underscore')
-        console.log("before character check:", item);
         if (event.target.textContent === item) {
             underscore.textContent = `${event.target.textContent}`
             eventArray.push(item)
-            flagIncorrGuess = 0
+            flagIncorrGuess = false
         }
         else if (event.key === item) {
             underscore.textContent = `${event.key}`
             eventArray.push(item)
-            flagIncorrGuess = 0
+            flagIncorrGuess = false
         }
         else if (eventArray.includes(item))
             underscore.textContent = `${item}`
+        else {
+            underscore.textContent = '_';
+            flagSuccess = false;
+        }
         answerContainer.appendChild(underscore)
+        console.log('success:', flagSuccess)
     })
-    if (flagIncorrGuess === 1) {
+    if (flagIncorrGuess === true) {
         numberOfIncorrGuess += 1
         numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
         images.src = `/hangman${numberOfIncorrGuess}.png`
     }
-    flagIncorrGuess = 1;
-    console.log('end of function flag:', flagIncorrGuess)
+    if (flagSuccess === true) {
+        renderModal();
+    }
+    
+    flagIncorrGuess = true;
+    flagSuccess= true;
     word.appendChild(answerContainer)
 }
+
 
 abc.forEach((item) => {
     let keyboardButton = document.createElement('button');
@@ -149,6 +163,9 @@ abc.forEach((item) => {
 const eventArray = []
 document.addEventListener('keydown', keyboard)
 
+// set a flag and when there are no underscores, render success messgae
+// so when underscore set flag to false and only when flag true,
+// success modal
 // if incorr Guesses >6 OR all letters filled, show modal text content
 // you've lost. the correct word was currentA. OR you've won. the correct...
 // Play again button
