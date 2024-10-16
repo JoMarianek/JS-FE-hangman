@@ -10,6 +10,7 @@ let QAndA = [
 ]
 
 const lastIndex = QAndA.length;
+
 const index = Math.floor(Math.random() * lastIndex)
 
 const currentQA = QAndA[index]
@@ -17,20 +18,25 @@ const currentQ = currentQA.question
 const currentA = currentQA.answer
 const currentAnswerArr = currentA.split('')
 
+
 const maxGuesses = 6;
 let numberOfIncorrGuess = 0;
 let flagIncorrGuess = true;
 let flagSuccess = true;
 
-
+const wonMsg = 'Congratulations. You have won!';
+const lostMsg = 'Sorry, you have lost.'
 
 const wrapper = document.createElement('div')
 wrapper.classList.add('wrapper')
 document.body.appendChild(wrapper)
 
-function renderModal() {
+function renderModal(outcomeMsg) {
+    const overlay = document.createElement('div')
+    overlay.classList.add('overlay')
+    document.body.appendChild(overlay)
     const modal = document.createElement('div')
-    modal.textContent = `You lost. `
+    modal.textContent = `${outcomeMsg}`
     modal.classList.add('modal')
     // modal.classList.add('hidden')
     wrapper.appendChild(modal)
@@ -43,6 +49,7 @@ function renderModal() {
     playAgainB.classList.add('play-again-button')
     modal.appendChild(playAgainB)
     playAgainB.onclick = function(event) {
+        overlay.classList.toggle('hidden')
         modal.classList.toggle('hidden')
         wrapper.remove()
         document.body.appendChild(wrapper)
@@ -144,14 +151,16 @@ function keyboard(event) {
         images.src = `/hangman${numberOfIncorrGuess}.png`
     }
     if (flagSuccess === true) {
-        renderModal();
+        renderModal(wonMsg);
+    }
+    if (numberOfIncorrGuess === 6) {
+        renderModal(lostMsg)
     }
     
     flagIncorrGuess = true;
     flagSuccess= true;
     word.appendChild(answerContainer)
 }
-
 
 abc.forEach((item) => {
     let keyboardButton = document.createElement('button');
