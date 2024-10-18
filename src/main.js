@@ -11,16 +11,17 @@ let QAndA = [
 
 const lastIndex = QAndA.length;
 
-const index = Math.floor(Math.random() * lastIndex)
+let index = Math.floor(Math.random() * lastIndex)
 
-const currentQA = QAndA[index]
-const currentQ = currentQA.question
-const currentA = currentQA.answer
-const currentAnswerArr = currentA.split('')
+let currentQA = QAndA[index]
+let currentQ = currentQA.question
+let currentA = currentQA.answer
+let currentAnswerArr = currentA.split('')
 
+let numberOfIncorrGuess = 0;
 
 const maxGuesses = 6;
-let numberOfIncorrGuess = 0;
+
 let flagIncorrGuess = true;
 let flagSuccess = true;
 
@@ -38,9 +39,10 @@ function renderModal(outcomeMsg) {
     const modal = document.createElement('div')
     modal.textContent = `${outcomeMsg}`
     modal.classList.add('modal')
-    // modal.classList.add('hidden')
+    // modal.classList.add('hidden') i think i need to add this as for second play thorugh the toggle will unhide ti on second play again button click
     wrapper.appendChild(modal)
     const correctAnswer = document.createElement('div')
+    correctAnswer.classList.add('modal-answer')
     correctAnswer.textContent = `The correct answer was: ${currentA}`
     modal.appendChild(correctAnswer)
 
@@ -52,12 +54,11 @@ function renderModal(outcomeMsg) {
         overlay.classList.toggle('hidden')
         modal.classList.toggle('hidden')
         wrapper.remove()
+        answerContainer.remove()
+        answerContainer = document.createElement('div')
+        setState();
+        word.appendChild(answerContainer)
         document.body.appendChild(wrapper)
-        numberOfIncorrGuess = 0;
-        currentQA = QAndA[index]
-        //update currentQA
-        // document.body.appendChild(wrapper) how to restart app again, wrap everythign 
-        // afunction? no that woudl be a god fucntion no?
     }
 }
 
@@ -124,7 +125,6 @@ function keyboard(event) {
     answerContainer = document.createElement('div')
     currentAnswerArr.map((item) => {
         const underscore = document.createElement('span');
-        // underscore.textContent = '_';
         underscore.classList.add('underscore')
         if (event.target.textContent === item) {
             underscore.textContent = `${event.target.textContent}`
@@ -143,19 +143,21 @@ function keyboard(event) {
             flagSuccess = false;
         }
         answerContainer.appendChild(underscore)
-        console.log('success:', flagSuccess)
     })
     if (flagIncorrGuess === true) {
         numberOfIncorrGuess += 1
         numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
         images.src = `/hangman${numberOfIncorrGuess}.png`
+        if(numberOfIncorrGuess === 6) {
+            renderModal(lostMsg)
+        }
     }
     if (flagSuccess === true) {
         renderModal(wonMsg);
     }
-    if (numberOfIncorrGuess === 6) {
-        renderModal(lostMsg)
-    }
+    // if (numberOfIncorrGuess === 6) {
+    //     renderModal(lostMsg)
+    // }
     
     flagIncorrGuess = true;
     flagSuccess= true;
@@ -183,3 +185,18 @@ document.addEventListener('keydown', keyboard)
 // if (numberOfIncorrGuess > maxGuesses || end of game) {
 //       modal.classList.
 // }
+
+function setState() {
+    index = Math.floor(Math.random() * lastIndex)
+    currentQA = QAndA[index]
+    currentQ = currentQA.question
+    currentA = currentQA.answer
+    currentAnswerArr = currentA.split('')
+    numberOfIncorrGuess = 0;
+    numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
+    images.src = `/hangman${numberOfIncorrGuess}.png`
+    renderAnswer(currentAnswerArr)
+    question.textContent = currentQ
+}
+
+// setState();
