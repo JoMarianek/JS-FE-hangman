@@ -22,6 +22,8 @@ let numberOfIncorrGuess = 0;
 
 const maxGuesses = 6;
 
+const abc = 'abcdefghijklmnopqrstuvwxyz'.split('')
+
 let flagIncorrGuess = true;
 let flagSuccess = true;
 
@@ -32,15 +34,29 @@ const wrapper = document.createElement('div')
 wrapper.classList.add('wrapper')
 document.body.appendChild(wrapper)
 
+const overlay = document.createElement('div')
+overlay.classList.add('overlay', 'hidden')
+document.body.appendChild(overlay)
+const modal = document.createElement('div')
+modal.classList.add('modal', 'hidden')
+wrapper.appendChild(modal)
+
+function resetGame() {
+    overlay.classList.toggle('hidden')
+    modal.classList.toggle('hidden')
+    wrapper.remove()
+    answerContainer.remove()
+    answerContainer = document.createElement('div')
+    setState();
+    word.appendChild(answerContainer)
+    document.body.appendChild(wrapper)
+}
+
 function renderModal(outcomeMsg) {
-    const overlay = document.createElement('div')
-    overlay.classList.add('overlay')
-    document.body.appendChild(overlay)
-    const modal = document.createElement('div')
     modal.textContent = `${outcomeMsg}`
-    modal.classList.add('modal')
-    // modal.classList.add('hidden') i think i need to add this as for second play thorugh the toggle will unhide ti on second play again button click
-    wrapper.appendChild(modal)
+    overlay.classList.toggle('hidden')
+    modal.classList.toggle('hidden')
+    
     const correctAnswer = document.createElement('div')
     correctAnswer.classList.add('modal-answer')
     correctAnswer.textContent = `The correct answer was: ${currentA}`
@@ -50,17 +66,9 @@ function renderModal(outcomeMsg) {
     playAgainB.textContent = 'Play again'
     playAgainB.classList.add('play-again-button')
     modal.appendChild(playAgainB)
-    playAgainB.onclick = function(event) {
-        overlay.classList.toggle('hidden')
-        modal.classList.toggle('hidden')
-        wrapper.remove()
-        answerContainer.remove()
-        answerContainer = document.createElement('div')
-        setState();
-        word.appendChild(answerContainer)
-        document.body.appendChild(wrapper)
-    }
+    playAgainB.onclick = resetGame;
 }
+
 
 const gallows = document.createElement('div')
 gallows.classList.add('gallows')
@@ -118,13 +126,11 @@ virtualKeyboard.classList.add('keyboard')
 
 riddle.appendChild(virtualKeyboard)
 
-const abc = 'abcdefghijklmnopqrstuvwxyz'.split('')
-
 function keyboard(event) {
     answerContainer.remove()
     answerContainer = document.createElement('div')
     currentAnswerArr.map((item) => {
-        const underscore = document.createElement('span');
+        const underscore = document.createElement('span'); // isnt underscore shadowing?
         underscore.classList.add('underscore')
         if (event.target.textContent === item) {
             underscore.textContent = `${event.target.textContent}`
@@ -171,20 +177,8 @@ abc.forEach((item) => {
     keyboardButton.onclick = keyboard;
 });
 
-const eventArray = []
+let eventArray = []
 document.addEventListener('keydown', keyboard)
-
-// set a flag and when there are no underscores, render success messgae
-// so when underscore set flag to false and only when flag true,
-// success modal
-// if incorr Guesses >6 OR all letters filled, show modal text content
-// you've lost. the correct word was currentA. OR you've won. the correct...
-// Play again button
-// how to check if all letters filled? store success, fail in vars and conditonally adapt
-// message of modal
-// if (numberOfIncorrGuess > maxGuesses || end of game) {
-//       modal.classList.
-// }
 
 function setState() {
     index = Math.floor(Math.random() * lastIndex)
@@ -193,10 +187,9 @@ function setState() {
     currentA = currentQA.answer
     currentAnswerArr = currentA.split('')
     numberOfIncorrGuess = 0;
+    eventArray = [];
     numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
     images.src = `/hangman${numberOfIncorrGuess}.png`
     renderAnswer(currentAnswerArr)
     question.textContent = currentQ
 }
-
-// setState();
