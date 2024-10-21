@@ -136,13 +136,8 @@ function renderGuesses(event) {
     currentAnswerArr.map((item) => {
         const underscore = document.createElement('span'); // isnt underscore shadowing?
         underscore.classList.add('underscore')
-        if (event.target.textContent === item) {
-            underscore.textContent = `${event.target.textContent}`
-            lettersPressed.push(item)
-            flagIncorrGuess = false
-        }
-        else if (event.key === item) {
-            underscore.textContent = `${event.key}`
+        if (event.target.textContent === item || event.key === item) {
+            underscore.textContent = `${item}`
             lettersPressed.push(item)
             flagIncorrGuess = false
         }
@@ -164,16 +159,13 @@ function determineOutcome(event) {
         numberOfIncorrGuess += 1
         updateGuessCounter()
         updateGallowImages()
-        if(numberOfIncorrGuess === 6) {
-            renderModal(lostMsg)
-        }
     }
     if (flagSuccess === true) {
         renderModal(wonMsg);
     }
-    // if (numberOfIncorrGuess === 6) {
-    //     renderModal(lostMsg)
-    // }
+    else if (numberOfIncorrGuess === 6) {
+        renderModal(lostMsg)
+    }
     
     flagIncorrGuess = true;
     flagSuccess= true;
