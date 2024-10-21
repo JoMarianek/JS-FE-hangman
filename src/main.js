@@ -75,8 +75,11 @@ gallows.classList.add('gallows')
 wrapper.appendChild(gallows)
 
 const images = document.createElement('img')
-images.src = `/hangman${numberOfIncorrGuess}.png`
 images.alt = 'Image of gallow'
+function updateGallowImages() {
+    images.src = `/hangman${numberOfIncorrGuess}.png`
+}
+updateGallowImages();
 gallows.appendChild(images)
 
 
@@ -88,7 +91,6 @@ const riddle = document.createElement('div')
 riddle.classList.add('riddle')
 
 wrapper.appendChild(riddle)
-
 
 const word = document.createElement('div')
 word.classList.add('word')
@@ -116,7 +118,11 @@ const guessCounter = document.createElement('p')
 guessCounter.textContent = 'Incorrect guesses: '
 
 const numberOfGuesses = document.createElement('span')
-numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
+
+function updateGuessCounter(){
+    numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
+}
+updateGuessCounter()
 
 riddle.appendChild(guessCounter)
 guessCounter.appendChild(numberOfGuesses)
@@ -126,23 +132,21 @@ virtualKeyboard.classList.add('keyboard')
 
 riddle.appendChild(virtualKeyboard)
 
-function keyboard(event) {
-    answerContainer.remove()
-    answerContainer = document.createElement('div')
+function renderGuesses(event) {
     currentAnswerArr.map((item) => {
         const underscore = document.createElement('span'); // isnt underscore shadowing?
         underscore.classList.add('underscore')
         if (event.target.textContent === item) {
             underscore.textContent = `${event.target.textContent}`
-            eventArray.push(item)
+            lettersPressed.push(item)
             flagIncorrGuess = false
         }
         else if (event.key === item) {
             underscore.textContent = `${event.key}`
-            eventArray.push(item)
+            lettersPressed.push(item)
             flagIncorrGuess = false
         }
-        else if (eventArray.includes(item))
+        else if (lettersPressed.includes(item))
             underscore.textContent = `${item}`
         else {
             underscore.textContent = '_';
@@ -150,10 +154,16 @@ function keyboard(event) {
         }
         answerContainer.appendChild(underscore)
     })
+}
+
+function determineOutcome(event) {
+    answerContainer.remove()
+    answerContainer = document.createElement('div')
+    renderGuesses(event);
     if (flagIncorrGuess === true) {
         numberOfIncorrGuess += 1
-        numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
-        images.src = `/hangman${numberOfIncorrGuess}.png`
+        updateGuessCounter()
+        updateGallowImages()
         if(numberOfIncorrGuess === 6) {
             renderModal(lostMsg)
         }
@@ -170,15 +180,18 @@ function keyboard(event) {
     word.appendChild(answerContainer)
 }
 
-abc.forEach((item) => {
-    let keyboardButton = document.createElement('button');
-    keyboardButton.textContent = item;
-    virtualKeyboard.appendChild(keyboardButton);
-    keyboardButton.onclick = keyboard;
-});
+function createKeyboard() {
+    abc.forEach((item) => {
+        let keyboardButton = document.createElement('button');
+        keyboardButton.textContent = item;
+        virtualKeyboard.appendChild(keyboardButton);
+        keyboardButton.onclick = determineOutcome;
+    })
+}
+createKeyboard()
 
-let eventArray = []
-document.addEventListener('keydown', keyboard)
+let lettersPressed = []
+document.addEventListener('keydown', determineOutcome)
 
 function setState() {
     index = Math.floor(Math.random() * lastIndex)
@@ -187,9 +200,9 @@ function setState() {
     currentA = currentQA.answer
     currentAnswerArr = currentA.split('')
     numberOfIncorrGuess = 0;
-    eventArray = [];
-    numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
-    images.src = `/hangman${numberOfIncorrGuess}.png`
+    lettersPressed = [];
+    updateGuessCounter()
+    updateGallowImages();
     renderAnswer(currentAnswerArr)
     question.textContent = currentQ
 }
