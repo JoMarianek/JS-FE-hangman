@@ -10,7 +10,6 @@ let QAndA = [
 ]
 
 const lastIndex = QAndA.length;
-
 let index = Math.floor(Math.random() * lastIndex)
 
 let currentQA = QAndA[index]
@@ -19,7 +18,6 @@ let currentA = currentQA.answer
 let currentAnswerArr = currentA.split('')
 
 let numberOfIncorrGuess = 0;
-
 const maxGuesses = 6;
 
 const abc = 'abcdefghijklmnopqrstuvwxyz'.split('')
@@ -31,12 +29,14 @@ const wonMsg = 'Congratulations. You have won!';
 const lostMsg = 'Sorry, you have lost.'
 
 const wrapper = document.createElement('div')
+
 wrapper.classList.add('wrapper')
 document.body.appendChild(wrapper)
 
 const overlay = document.createElement('div')
 overlay.classList.add('overlay', 'hidden')
 document.body.appendChild(overlay)
+
 const modal = document.createElement('div')
 modal.classList.add('modal', 'hidden')
 wrapper.appendChild(modal)
@@ -66,9 +66,8 @@ function renderModal(outcomeMsg) {
     playAgainB.textContent = 'Play again'
     playAgainB.classList.add('play-again-button')
     modal.appendChild(playAgainB)
-    playAgainB.onclick = resetGame;
+    playAgainB.onclick = resetGame(overlay, modal);
 }
-
 
 const gallows = document.createElement('div')
 gallows.classList.add('gallows')
@@ -82,7 +81,6 @@ function updateGallowImages() {
 updateGallowImages();
 gallows.appendChild(images)
 
-
 const title = document.createElement('h1')
 title.textContent = 'HANGMAN GAME'
 gallows.appendChild(title)
@@ -95,12 +93,14 @@ wrapper.appendChild(riddle)
 const word = document.createElement('div')
 word.classList.add('word')
 
+// let domObj = {overlay: overlay, modal: modal, word: word}
+
 riddle.appendChild(word)
 
 let answerContainer = document.createElement('div')
 word.appendChild(answerContainer)
 
-function renderAnswer(answer) {
+function renderUnderscores(answer) {
     answer.forEach((item) => {
         const underscore = document.createElement('span');
         underscore.textContent = '_';
@@ -108,7 +108,7 @@ function renderAnswer(answer) {
         answerContainer.appendChild(underscore);
     })
 }
-renderAnswer(currentAnswerArr);
+renderUnderscores(currentAnswerArr);
 
 const question = document.createElement('h2')
 question.textContent = currentQ
@@ -134,20 +134,20 @@ riddle.appendChild(virtualKeyboard)
 
 function renderGuesses(event) {
     currentAnswerArr.map((item) => {
-        const underscore = document.createElement('span'); // isnt underscore shadowing?
-        underscore.classList.add('underscore')
+        const guessResult = document.createElement('span'); // isnt underscore shadowing?
+        guessResult.classList.add('underscore')
         if (event.target.textContent === item || event.key === item) {
-            underscore.textContent = `${item}`
+            guessResult.textContent = `${item}`
             lettersPressed.push(item)
             flagIncorrGuess = false
         }
         else if (lettersPressed.includes(item))
-            underscore.textContent = `${item}`
+            guessResult.textContent = `${item}`
         else {
-            underscore.textContent = '_';
+            guessResult.textContent = '_';
             flagSuccess = false;
         }
-        answerContainer.appendChild(underscore)
+        answerContainer.appendChild(guessResult)
     })
 }
 
@@ -195,6 +195,6 @@ function setState() {
     lettersPressed = [];
     updateGuessCounter()
     updateGallowImages();
-    renderAnswer(currentAnswerArr)
+    renderUnderscores(currentAnswerArr)
     question.textContent = currentQ
 }
