@@ -87,7 +87,6 @@ gallows.appendChild(title)
 
 const riddle = document.createElement('div')
 riddle.classList.add('riddle')
-
 wrapper.appendChild(riddle)
 
 const word = document.createElement('div')
@@ -98,6 +97,7 @@ word.classList.add('word')
 riddle.appendChild(word)
 
 let answerContainer = document.createElement('div')
+answerContainer.classList.add('answercontainer')
 word.appendChild(answerContainer)
 
 function renderUnderscores(answer) {
@@ -170,6 +170,7 @@ function determineOutcome(event) {
     flagIncorrGuess = true;
     flagSuccess= true;
     word.appendChild(answerContainer)
+    answerContainer.classList.add('answercontainer')
 }
 
 function createKeyboard() {

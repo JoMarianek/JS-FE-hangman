@@ -7,16 +7,18 @@
 
 .wrapper {
     display: flex;
+    box-sizing: border-box;
     justify-content: space-around;
-    margin: 25px 50px 0 50px;
+    padding: 15px 25px 0 25px;
     height: 100vh;
 }
 
 .gallows {
     display: flex;
+    align-items: flex-start;
     flex-direction: column;
     justify-content: space-evenly;
-    width: 100%;
+    width: 40%;
 }
 
 .riddle {
@@ -24,18 +26,24 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    width: 100%
+    width: 60%
 }
 
 .word {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    margin: 15px;
+}
+
+.answercontainer {
+    justify-content: center;
+    display: flex;
 }
 
 .underscore {
     color: lightgreen;
-    margin: 10px;
-    font-size: 2.5em;
+    margin: 5%;
+    font-size: 200%;
     font-weight: 100;
 }
 
@@ -45,7 +53,7 @@
     box-sizing: border-box;
     justify-content: center;
     margin: 15px;
-    width: 43%;
+    max-width: 430px;
 
 }
 
@@ -92,6 +100,10 @@
     margin: 10px;
 }
 
+body {
+    margin: 0;
+}
+
 span {
     color: red;
 }
@@ -105,7 +117,7 @@ h2 {
 }
 
 img {
-    width: 60%;
+    width: 30vw;
     height: auto;
 }
 
@@ -120,5 +132,39 @@ button {
     :root {
         background-color: whitesmoke;
         color: rgb(27, 27, 27, 0.85);
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .wrapper {
+        flex-direction: column;
+    }
+
+    .gallows {
+        flex-direction: column-reverse;
+        width: 100%;
+        align-items: center;
+    }
+
+    .riddle {
+        width: 100%;
+    }
+
+    img {
+        width: 45%;
+        align-self: center;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .keyboard {
+        width: 100%;
+    }
+
+    .underscore {
+        font-size: 10vw;
+        margin: 1vw;
     }
 }
