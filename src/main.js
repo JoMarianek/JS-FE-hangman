@@ -47,6 +47,7 @@ function resetGame() {
     wrapper.remove()
     answerContainer.remove()
     answerContainer = document.createElement('div')
+    answerContainer.classList.add('answercontainer')
     setState();
     word.appendChild(answerContainer)
     document.body.appendChild(wrapper)
@@ -66,7 +67,7 @@ function renderModal(outcomeMsg) {
     playAgainB.textContent = 'Play again'
     playAgainB.classList.add('play-again-button')
     modal.appendChild(playAgainB)
-    playAgainB.onclick = resetGame(overlay, modal);
+    playAgainB.onclick = resetGame;
 }
 
 const gallows = document.createElement('div')
