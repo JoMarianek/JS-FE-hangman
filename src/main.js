@@ -31,17 +31,8 @@ const lostMsg = 'Sorry, you have lost.'
 const wrapper = document.createElement('div')
 
 wrapper.classList.add('wrapper')
-document.body.appendChild(wrapper)
 
-const overlay = document.createElement('div')
-overlay.classList.add('overlay', 'hidden')
-document.body.appendChild(overlay)
-
-const modal = document.createElement('div')
-modal.classList.add('modal', 'hidden')
-wrapper.appendChild(modal)
-
-function resetGame() {
+function resetGame({overlay, modal, word}) {
     overlay.classList.toggle('hidden')
     modal.classList.toggle('hidden')
     wrapper.remove()
@@ -67,8 +58,20 @@ function renderModal(outcomeMsg) {
     playAgainB.textContent = 'Play again'
     playAgainB.classList.add('play-again-button')
     modal.appendChild(playAgainB)
-    playAgainB.onclick = resetGame;
+    playAgainB.onclick = () => resetGame(domObj);
 }
+//transform everything into a obj pass as props and move functions up to top of document
+document.body.appendChild(wrapper)
+
+const overlay = document.createElement('div')
+overlay.classList.add('overlay', 'hidden')
+document.body.appendChild(overlay)
+
+const modal = document.createElement('div')
+modal.classList.add('modal', 'hidden')
+wrapper.appendChild(modal)
+
+
 
 const gallows = document.createElement('div')
 gallows.classList.add('gallows')
@@ -93,7 +96,7 @@ wrapper.appendChild(riddle)
 const word = document.createElement('div')
 word.classList.add('word')
 
-// let domObj = {overlay: overlay, modal: modal, word: word}
+const domObj = {overlay, modal, word}
 
 riddle.appendChild(word)
 
