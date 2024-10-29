@@ -60,6 +60,10 @@ function renderModal(outcomeMsg) {
     modal.appendChild(playAgainB)
     playAgainB.onclick = () => resetGame(domObj);
 }
+
+function updateGallowImages(imageDom, imageNumber) {
+    imageDom.src = `/hangman${imageNumber}.png`
+}
 //transform everything into a obj pass as props and move functions up to top of document
 document.body.appendChild(wrapper)
 
@@ -71,18 +75,13 @@ const modal = document.createElement('div')
 modal.classList.add('modal', 'hidden')
 wrapper.appendChild(modal)
 
-
-
 const gallows = document.createElement('div')
 gallows.classList.add('gallows')
 wrapper.appendChild(gallows)
 
 const images = document.createElement('img')
 images.alt = 'Image of gallow'
-function updateGallowImages() {
-    images.src = `/hangman${numberOfIncorrGuess}.png`
-}
-updateGallowImages();
+updateGallowImages(images, numberOfIncorrGuess);
 gallows.appendChild(images)
 
 const title = document.createElement('h1')
@@ -162,7 +161,7 @@ function determineOutcome(event) {
     if (flagIncorrGuess === true) {
         numberOfIncorrGuess += 1
         updateGuessCounter()
-        updateGallowImages()
+        updateGallowImages(images, numberOfIncorrGuess)
     }
     if (flagSuccess === true) {
         renderModal(wonMsg);
@@ -199,7 +198,7 @@ function setState() {
     numberOfIncorrGuess = 0;
     lettersPressed = [];
     updateGuessCounter()
-    updateGallowImages();
+    updateGallowImages(images, numberOfIncorrGuess);
     renderUnderscores(currentAnswerArr)
     question.textContent = currentQ
 }
