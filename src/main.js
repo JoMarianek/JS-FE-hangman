@@ -22,6 +22,8 @@ const maxGuesses = 6;
 
 const abc = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
+let lettersPressed = [];
+
 let flagIncorrGuess = true;
 let flagSuccess = true;
 
@@ -31,6 +33,20 @@ const lostMsg = 'Sorry, you have lost.'
 const wrapper = document.createElement('div')
 
 wrapper.classList.add('wrapper')
+
+function setState() {
+    index = Math.floor(Math.random() * lastIndex)
+    currentQA = QAndA[index]
+    currentQ = currentQA.question
+    currentA = currentQA.answer
+    currentAnswerArr = currentA.split('')
+    numberOfIncorrGuess = 0;
+    lettersPressed = [];
+    updateGuessCounter()
+    updateGallowImages(images, numberOfIncorrGuess);
+    renderUnderscores(currentAnswerArr)
+    question.textContent = currentQ
+}
 
 function resetGame({overlay, modal, word}) {
     overlay.classList.toggle('hidden')
@@ -42,7 +58,7 @@ function resetGame({overlay, modal, word}) {
     setState();
     word.appendChild(answerContainer)
     document.body.appendChild(wrapper)
-}
+} //so i need to pass arguments here because its two layers?
 
 function renderModal(outcomeMsg) {
     modal.textContent = `${outcomeMsg}`
@@ -64,76 +80,19 @@ function renderModal(outcomeMsg) {
 function updateGallowImages(imageDom, imageNumber) {
     imageDom.src = `/hangman${imageNumber}.png`
 }
-//transform everything into a obj pass as props and move functions up to top of document
-document.body.appendChild(wrapper)
-
-const overlay = document.createElement('div')
-overlay.classList.add('overlay', 'hidden')
-document.body.appendChild(overlay)
-
-const modal = document.createElement('div')
-modal.classList.add('modal', 'hidden')
-wrapper.appendChild(modal)
-
-const gallows = document.createElement('div')
-gallows.classList.add('gallows')
-wrapper.appendChild(gallows)
-
-const images = document.createElement('img')
-images.alt = 'Image of gallow'
-updateGallowImages(images, numberOfIncorrGuess);
-gallows.appendChild(images)
-
-const title = document.createElement('h1')
-title.textContent = 'HANGMAN GAME'
-gallows.appendChild(title)
-
-const riddle = document.createElement('div')
-riddle.classList.add('riddle')
-wrapper.appendChild(riddle)
-
-const word = document.createElement('div')
-word.classList.add('word')
-
-const domObj = {overlay, modal, word}
-
-riddle.appendChild(word)
-
-let answerContainer = document.createElement('div')
-answerContainer.classList.add('answercontainer')
-word.appendChild(answerContainer)
 
 function renderUnderscores(answer) {
-    answer.forEach((item) => {
+    answer.forEach(() => {
         const underscore = document.createElement('span');
         underscore.textContent = '_';
         underscore.classList.add('underscore')
-        answerContainer.appendChild(underscore);
+        answerContainer.appendChild(underscore); //how is this not throwing an error, because asnwercontainer doesnt exist here yet?
     })
 }
-renderUnderscores(currentAnswerArr);
-
-const question = document.createElement('h2')
-question.textContent = currentQ
-riddle.appendChild(question)
-
-const guessCounter = document.createElement('p')
-guessCounter.textContent = 'Incorrect guesses: '
-
-const numberOfGuesses = document.createElement('span')
 
 function updateGuessCounter(){
     numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
 }
-updateGuessCounter()
-
-riddle.appendChild(guessCounter)
-guessCounter.appendChild(numberOfGuesses)
-
-const virtualKeyboard = document.createElement('div')
-virtualKeyboard.classList.add('keyboard')
-
-riddle.appendChild(virtualKeyboard)
 
 function renderGuesses(event) {
     currentAnswerArr.map((item) => {
@@ -184,21 +143,67 @@ function createKeyboard() {
         keyboardButton.onclick = determineOutcome;
     })
 }
+
+//transform everything into a obj pass as props and move functions up to top of document
+document.body.appendChild(wrapper)
+
+const overlay = document.createElement('div')
+overlay.classList.add('overlay', 'hidden')
+document.body.appendChild(overlay)
+
+const modal = document.createElement('div')
+modal.classList.add('modal', 'hidden')
+wrapper.appendChild(modal)
+
+const gallows = document.createElement('div')
+gallows.classList.add('gallows')
+wrapper.appendChild(gallows)
+
+const images = document.createElement('img')
+images.alt = 'Image of gallow'
+updateGallowImages(images, numberOfIncorrGuess);
+gallows.appendChild(images)
+
+const title = document.createElement('h1')
+title.textContent = 'HANGMAN GAME'
+gallows.appendChild(title)
+
+const riddle = document.createElement('div')
+riddle.classList.add('riddle')
+wrapper.appendChild(riddle)
+
+const word = document.createElement('div')
+word.classList.add('word')
+
+const domObj = {overlay, modal, word}
+
+riddle.appendChild(word)
+
+let answerContainer = document.createElement('div')
+answerContainer.classList.add('answercontainer')
+word.appendChild(answerContainer)
+
+renderUnderscores(currentAnswerArr);
+
+const question = document.createElement('h2')
+question.textContent = currentQ
+riddle.appendChild(question)
+
+const guessCounter = document.createElement('p')
+guessCounter.textContent = 'Incorrect guesses: '
+
+const numberOfGuesses = document.createElement('span')
+
+updateGuessCounter()
+
+riddle.appendChild(guessCounter)
+guessCounter.appendChild(numberOfGuesses)
+
+const virtualKeyboard = document.createElement('div')
+virtualKeyboard.classList.add('keyboard')
+
+riddle.appendChild(virtualKeyboard)
+
 createKeyboard()
 
-let lettersPressed = []
 document.addEventListener('keydown', determineOutcome)
-
-function setState() {
-    index = Math.floor(Math.random() * lastIndex)
-    currentQA = QAndA[index]
-    currentQ = currentQA.question
-    currentA = currentQA.answer
-    currentAnswerArr = currentA.split('')
-    numberOfIncorrGuess = 0;
-    lettersPressed = [];
-    updateGuessCounter()
-    updateGallowImages(images, numberOfIncorrGuess);
-    renderUnderscores(currentAnswerArr)
-    question.textContent = currentQ
-}
