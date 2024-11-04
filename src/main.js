@@ -2,20 +2,15 @@
 import './style.css'
 
 let QAndA = [
-    {question:'A medical condition characterized by the abnormal increase of body temperature.', answer: 'hyperthermia'},
-    {question: 'A large celestial body that orbits a star.', answer: 'planet'},
-    {question: 'A building or outdoor area where plays, films, or performances are presented.', answer: 'auditorium'},
-    {question: 'A fear of open or crowded spaces.', answer: 'agoraphobia'},
-    {question: 'The process by which green plants use sunlight to synthesize food.', answer: 'photosynthesis'},
+    {q:'A medical condition characterized by the abnormal increase of body temperature.', a: 'hyperthermia'},
+    {q: 'A large celestial body that orbits a star.', a: 'planet'},
+    {q: 'A building or outdoor area where plays, films, or performances are presented.', a: 'auditorium'},
+    {q: 'A fear of open or crowded spaces.', a: 'agoraphobia'},
+    {q: 'The process by which green plants use sunlight to synthesize food.', a: 'photosynthesis'},
 ]
 
-const lastIndex = QAndA.length;
-let index = Math.floor(Math.random() * lastIndex)
-
-let currentQA = QAndA[index]
-let currentQ = currentQA.question
-let currentA = currentQA.answer
-let currentAnswerArr = currentA.split('')
+const { q: question, a: answer } = QAndA[Math.floor(Math.random() * QAndA.length)]
+let currentAnswerArr = answer.split('')
 
 let numberOfIncorrGuess = 0;
 const maxGuesses = 6;
@@ -35,20 +30,17 @@ const wrapper = document.createElement('div')
 wrapper.classList.add('wrapper')
 
 function setState() {
-    index = Math.floor(Math.random() * lastIndex)
-    currentQA = QAndA[index]
-    currentQ = currentQA.question
-    currentA = currentQA.answer
-    currentAnswerArr = currentA.split('')
+    const {q: question, a: answer } = QAndA[Math.floor(Math.random() * QAndA.length)]
+    currentAnswerArr = answer.split('')
     numberOfIncorrGuess = 0;
     lettersPressed = [];
     updateGuessCounter()
     updateGallowImages(images, numberOfIncorrGuess);
     renderUnderscores(currentAnswerArr)
-    question.textContent = currentQ
+    questionContainer.textContent = question
 }
 
-function resetGame({overlay, modal, word}) {
+function resetGame() {
     overlay.classList.toggle('hidden')
     modal.classList.toggle('hidden')
     wrapper.remove()
@@ -58,16 +50,16 @@ function resetGame({overlay, modal, word}) {
     setState();
     word.appendChild(answerContainer)
     document.body.appendChild(wrapper)
-} //so i need to pass arguments here because its two layers?
+} //so i need to pass arguments here because its two layers
 
-function renderModal(outcomeMsg) {
-    modal.textContent = `${outcomeMsg}`
+function renderModal(success) {
+    modal.textContent = success ? 'Congratulations. You have won!' : 'Sorry, you have lost.'
     overlay.classList.toggle('hidden')
     modal.classList.toggle('hidden')
     
     const correctAnswer = document.createElement('div')
     correctAnswer.classList.add('modal-answer')
-    correctAnswer.textContent = `The correct answer was: ${currentA}`
+    correctAnswer.textContent = `The correct answer was: ${answer}`
     modal.appendChild(correctAnswer)
 
     const playAgainB = document.createElement('button')
@@ -88,7 +80,7 @@ function renderUnderscores(answer) {
         underscore.classList.add('underscore')
         answerContainer.appendChild(underscore); //how is this not throwing an error, because asnwercontainer doesnt exist here yet?
     })
-}
+}// here i dont need to pass as i am creating the span in the function? what about the answerconta
 
 function updateGuessCounter(){
     numberOfGuesses.textContent = `${numberOfIncorrGuess} / ${maxGuesses}`
@@ -123,10 +115,10 @@ function determineOutcome(event) {
         updateGallowImages(images, numberOfIncorrGuess)
     }
     if (flagSuccess === true) {
-        renderModal(wonMsg);
+        renderModal(true);
     }
-    else if (numberOfIncorrGuess === 6) {
-        renderModal(lostMsg)
+    else if (numberOfIncorrGuess === maxGuesses) {
+        renderModal(false)
     }
     
     flagIncorrGuess = true;
@@ -185,9 +177,9 @@ word.appendChild(answerContainer)
 
 renderUnderscores(currentAnswerArr);
 
-const question = document.createElement('h2')
-question.textContent = currentQ
-riddle.appendChild(question)
+const questionContainer = document.createElement('h2')
+questionContainer.textContent = question
+riddle.appendChild(questionContainer)
 
 const guessCounter = document.createElement('p')
 guessCounter.textContent = 'Incorrect guesses: '
