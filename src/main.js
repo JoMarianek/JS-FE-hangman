@@ -38,6 +38,7 @@ function setState() {
     updateGallowImages(images, numberOfIncorrGuess);
     renderUnderscores(currentAnswerArr)
     questionContainer.textContent = question
+    virtualKeyboard.querySelectorAll('.letter').forEach(btn => btn.disabled = false)
 }
 
 function resetGame() {
@@ -52,7 +53,7 @@ function resetGame() {
     document.body.appendChild(wrapper)
 } //so i need to pass arguments here because its two layers
 
-function renderModal(success) {
+function gameSuccess(success) {
     modal.textContent = success ? 'Congratulations. You have won!' : 'Sorry, you have lost.'
     overlay.classList.toggle('hidden')
     modal.classList.toggle('hidden')
@@ -87,6 +88,10 @@ function updateGuessCounter(){
 }
 
 function renderGuesses(event) {
+    event.target.disabled = true
+    if (event.key) {
+        
+    }
     currentAnswerArr.map((item) => {
         const guessResult = document.createElement('span'); // isnt underscore shadowing?
         guessResult.classList.add('underscore')
@@ -104,7 +109,7 @@ function renderGuesses(event) {
         answerContainer.appendChild(guessResult)
     })
 }
-
+//TODO: physical keydowns should disable virtual keyboard buttons
 function determineOutcome(event) {
     answerContainer.remove()
     answerContainer = document.createElement('div')
@@ -115,10 +120,10 @@ function determineOutcome(event) {
         updateGallowImages(images, numberOfIncorrGuess)
     }
     if (flagSuccess === true) {
-        renderModal(true);
+        gameSuccess(true);
     }
     else if (numberOfIncorrGuess === maxGuesses) {
-        renderModal(false)
+        gameSuccess(false)
     }
     
     flagIncorrGuess = true;
@@ -130,9 +135,10 @@ function determineOutcome(event) {
 function createKeyboard() {
     abc.forEach((item) => {
         let keyboardButton = document.createElement('button');
+        keyboardButton.classList.add('letter')
         keyboardButton.textContent = item;
         virtualKeyboard.appendChild(keyboardButton);
-        keyboardButton.onclick = determineOutcome;
+        keyboardButton.addEventListener('click', (event) => determineOutcome(event))
     })
 }
 
